@@ -10,7 +10,7 @@ Pythonの勉強用に書いてみた程度のスクリプトなので、たぶ�
 ## 使い方
 `python3`を使います。
 
-Synopsis:
+使用例:
 
     python3 main.py 'URL of album/single' /foo/bar/*.mp3
 

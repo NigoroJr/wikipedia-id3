@@ -13,7 +13,7 @@ pretty sure I'm doing some idiotic stuff even in this short script.*
 ## How
 This script uses `python3`.
 
-Synopsis:
+Examples:
 
     python3 main.py 'URL of album/single' /foo/bar/*.mp3
 
