@@ -10,7 +10,7 @@ import urllib3
 import taglib
 
 class MyHTMLParser(HTMLParser):
-    ignore_tags = {"ul", "dl", "dd"}
+    ignore_tags = {'ul', 'dl', 'dd'}
 
     def __init__(self, target_ol_count = 1):
         self.target_ol_count = target_ol_count
@@ -20,7 +20,7 @@ class MyHTMLParser(HTMLParser):
         self.in_li = False
         self.skip_depth = 0
         self.titles = []
-        self.title_str = ""
+        self.title_str = ''
         super(MyHTMLParser, self).__init__()
 
     def handle_starttag(self, tag, attrs):
@@ -28,15 +28,15 @@ class MyHTMLParser(HTMLParser):
         if self.ol_count != self.target_ol_count:
             return
 
-        if tag == "ol":
+        if tag == 'ol':
             self.in_ol = True
-        elif tag == "li" and self.in_ol and self.skip_depth == 0:
+        elif tag == 'li' and self.in_ol and self.skip_depth == 0:
             self.in_li = True
         elif tag in self.ignore_tags:
             self.skip_depth += 1
 
     def handle_endtag(self, tag):
-        if tag == "ol":
+        if tag == 'ol':
             self.in_ol = False
             self.ol_count += 1
 
@@ -44,11 +44,11 @@ class MyHTMLParser(HTMLParser):
         elif self.ol_count != self.target_ol_count:
             return
 
-        elif tag == "li" and self.in_li and self.skip_depth == 0:
+        elif tag == 'li' and self.in_li and self.skip_depth == 0:
             self.in_li = False
 
             self.add_title(self.title_str)   # Add title to list
-            self.title_str = ""              # Reset title
+            self.title_str = ''              # Reset title
 
         elif tag in self.ignore_tags:
             self.skip_depth -= 1
@@ -76,8 +76,8 @@ class MyHTMLParser(HTMLParser):
         if not title:
             return
 
-        # Remove [TIME] e.g. "Title [3:35]" => "Title"
-        title = re.sub("\s*\[.*?\]\s*$", "", title)
+        # Remove [TIME] e.g. 'Title [3:35]' => 'Title'
+        title = re.sub('\s*\[.*?\]\s*$', '', title)
 
         self.titles.append(title)
 
@@ -111,11 +111,11 @@ def set_track_titles(titles, files, artist):
 
 
 argparser = argparse.ArgumentParser()
-argparser.add_argument("--ol-count",  type=int, default=1, metavar="N",
-        help="use Nth <ol> tag as the list of track titles")
-argparser.add_argument("--artist", help="album artist")
-argparser.add_argument("url")
-argparser.add_argument("files", nargs='+', help="files to write the tags to")
+argparser.add_argument('--ol-count',  type=int, default=1, metavar='N',
+        help='use Nth <ol> tag as the list of track titles')
+argparser.add_argument('--artist', help='album artist')
+argparser.add_argument('url')
+argparser.add_argument('files', nargs='+', help='files to write the tags to')
 
 args = argparser.parse_args()
 url = args.url
