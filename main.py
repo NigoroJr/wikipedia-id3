@@ -132,24 +132,52 @@ def rename_files(titles, files):
         os.rename(old_file_path, new_file_path)
         print("Renamed: {0}\n\t=> {1}".format(old_file_name, new_file_name))
 
+def print_titles(titles, artist=None, album=None, year=None):
+    print('Changes to be written')
+    if artist:
+        print('{0:<6s}: {1}'.format('Artist', artist))
+    if album:
+        print('{0:<6s}: {1}'.format('Album', album))
+    if year:
+        print('{0:<6s}: {1}'.format('Year', year))
+
+    print('{0:<6s}: {1}'.format('Track', 'Title'))
+    print('--------------------------------------')
+    fmt = '    {track_num:02d}. {title}'
+    for i in range(len(titles)):
+        print(fmt.format(track_num=i + 1, title=titles[i]))
+
 
 argparser = argparse.ArgumentParser()
 # Options
-argparser.add_argument('--ol-count',  type=int, default=1, metavar='N',
+argparser.add_argument('--ol-count',  '-o', type=int, default=1, metavar='N',
         help='use Nth <ol> tag as the list of track titles')
-argparser.add_argument('--artist', help='album artist')
-argparser.add_argument('--album', help='album name')
-argparser.add_argument('--album-from-url',  action='store_true',
+argparser.add_argument('--artist', '-ar',
+        help='album artist')
+argparser.add_argument('--album', '-al',
+        help='album name')
+argparser.add_argument('--album-from-url', '-au', action='store_true',
         help='album name from url')
-argparser.add_argument('--year', help='year the album was released')
-argparser.add_argument('--rename', action='store_true',
+argparser.add_argument('--year', '-y',
+        help='year the album was released')
+argparser.add_argument('--rename', '-r', action='store_true',
         help='rename files to track titles in the format of "01. Foobar.mp3"')
+argparser.add_argument('--test', '-t', action='store_true',
+        help='only display the titles')
+
 # Required
 argparser.add_argument('url')
-argparser.add_argument('files', nargs='+', help='files to write the tags to')
+
+# Required unless test
+argparser.add_argument('files', nargs=argparse.REMAINDER,
+        help='files to write the tags to')
 
 args = argparser.parse_args()
-album_name = ''
+
+if not args.test and len(args.files) == 0:
+    argparser.error('must specify files unless test')
+
+album_name = None
 if args.album:
     album_name = args.album
 elif args.album_from_url:
@@ -157,10 +185,14 @@ elif args.album_from_url:
     url_path = urllib.parse.unquote(o.path, 'utf-8')
     # Remove '/wiki/'
     album_name = re.sub('\/wiki\/', '', url_path)
-print(album_name)
 
-# print(get_titles(args.url, args.ol_count))
 titles = get_titles(args.url, args.ol_count)
+
+# Only titles and exit
+if args.test:
+    print_titles(titles, args.artist, album_name, args.year)
+    exit()
+
 set_track_titles(titles, args.files, args.artist, album_name, args.year)
 
 if args.rename:

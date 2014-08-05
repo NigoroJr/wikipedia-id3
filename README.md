@@ -51,5 +51,10 @@ then the renamed files will be:
 
 You can tag extensions that are supported by [TagLib](http://taglib.github.io/).
 
+The `--test` option can be used to only retrieve track list and not write to
+the files. Since it doesn't write to the files, a list of files need not be
+given. Options such as `--ol-count`, `album` etc. can still be given and they
+will be shown in the summary.
+
 ## Author
 Naoki Mizuno (NigoroJr)

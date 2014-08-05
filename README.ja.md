@@ -43,6 +43,9 @@ URLがアルバム名の場合(ほとんどの場合そうでしょう)、`--alb
 
 にそれぞれ名前が変更されます。
 
+`--test`オプションを使用することで、曲目の取得のみをすることができます。
+この場合でも`--ol-count`や`--album`といったオプションは指定でき、一覧に表示されます。
+
 対応拡張子は、[TagLib](http://taglib.github.io/)が対応しているものです。サードパーティーライブラリは、
 [`pytaglib`](https://github.com/supermihi/pytaglib),
 [`urllib3`](https://github.com/shazow/urllib3)を使用します。
