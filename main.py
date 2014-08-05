@@ -2,9 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import os.path
 import re
 import sys
 from html.parser import HTMLParser
+import urllib.parse
 
 import urllib3
 import taglib
@@ -113,6 +115,23 @@ def set_track_titles(titles, files, artist, album, year):
         else:
             print('Saved tags to {0}'.format(files[i]))
 
+def rename_files(titles, files):
+    n = min(len(titles), len(files))    # Whichever's shorter
+    for i in range(n):
+        title = titles[i]
+        old_file_path = files[i]
+        extension = re.sub('.*\.', '', old_file_path)
+
+        dir_name = os.path.dirname(old_file_path)
+        old_file_name = os.path.basename(old_file_path)
+        new_file_name = "{0:02d}. {1}.{2}".format(i + 1, title, extension)
+
+        # Replace only the file path
+        new_file_path = os.path.join(dir_name, new_file_name)
+
+        os.rename(old_file_path, new_file_path)
+        print("Renamed: {0}\n\t=> {1}".format(old_file_name, new_file_name))
+
 
 argparser = argparse.ArgumentParser()
 # Options
@@ -120,7 +139,11 @@ argparser.add_argument('--ol-count',  type=int, default=1, metavar='N',
         help='use Nth <ol> tag as the list of track titles')
 argparser.add_argument('--artist', help='album artist')
 argparser.add_argument('--album', help='album name')
+argparser.add_argument('--album-from-url',  action='store_true',
+        help='album name from url')
 argparser.add_argument('--year', help='year the album was released')
+argparser.add_argument('--rename', action='store_true',
+        help='rename files to track titles in the format of "01. Foobar.mp3"')
 # Required
 argparser.add_argument('url')
 argparser.add_argument('files', nargs='+', help='files to write the tags to')
@@ -129,8 +152,16 @@ args = argparser.parse_args()
 album_name = ''
 if args.album:
     album_name = args.album
+elif args.album_from_url:
+    o = urllib.parse.urlparse(args.url)
+    url_path = urllib.parse.unquote(o.path, 'utf-8')
+    # Remove '/wiki/'
+    album_name = re.sub('\/wiki\/', '', url_path)
 print(album_name)
 
 # print(get_titles(args.url, args.ol_count))
 titles = get_titles(args.url, args.ol_count)
 set_track_titles(titles, args.files, args.artist, album_name, args.year)
+
+if args.rename:
+    rename_files(titles, args.files)
