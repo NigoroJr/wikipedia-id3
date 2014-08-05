@@ -91,13 +91,17 @@ def get_titles(url, ol_count = 1):
 
     return parser.titles
 
-def set_track_titles(titles, files, artist):
+def set_track_titles(titles, files, artist, album, year):
     n = min(len(titles), len(files))    # Whichever's shorter
     for i in range(n):
         f = taglib.File(files[i])
 
         if artist:
             f.tags['ARTIST'] = artist
+        if album:
+            f.tags['ALBUM'] = album
+        if year:
+            f.tags['YEAR'] = year
 
         f.tags['TITLE'] = titles[i]
         digits = len(str(len(titles)))
@@ -111,18 +115,22 @@ def set_track_titles(titles, files, artist):
 
 
 argparser = argparse.ArgumentParser()
+# Options
 argparser.add_argument('--ol-count',  type=int, default=1, metavar='N',
         help='use Nth <ol> tag as the list of track titles')
 argparser.add_argument('--artist', help='album artist')
+argparser.add_argument('--album', help='album name')
+argparser.add_argument('--year', help='year the album was released')
+# Required
 argparser.add_argument('url')
 argparser.add_argument('files', nargs='+', help='files to write the tags to')
 
 args = argparser.parse_args()
-url = args.url
-ol_count = args.ol_count
-files = args.files
-artist = args.artist
+album_name = ''
+if args.album:
+    album_name = args.album
+print(album_name)
 
-# print(get_titles(url, ol_count))
-titles = get_titles(url, ol_count)
-set_track_titles(titles, files, artist)
+# print(get_titles(args.url, args.ol_count))
+titles = get_titles(args.url, args.ol_count)
+set_track_titles(titles, args.files, args.artist, album_name, args.year)
