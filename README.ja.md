@@ -18,7 +18,7 @@ Pythonの勉強用に書いてみた程度のスクリプトなので、たぶ�
 
     python3 main.py --artist='foobar' --album-from-url --rename 'URL of album' *.mp3
 
-    # When --album and --album-from-url are both given, --album is used
+    # --album と --album-from-url の両方がオンの場合、 --album が使われます。
     python3 main.py --artist='somebody' --year=2012 \
         --album='awesome album' --album-from-url \
         'URL of album/single' /foo/bar/*.flac

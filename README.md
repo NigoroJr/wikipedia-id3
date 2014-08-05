@@ -21,7 +21,7 @@ Examples:
 
     python3 main.py --artist='foobar' --album-from-url --rename 'URL of album' *.mp3
 
-    # --album と --album-from-url の両方がオンの場合、 --album が使われます。
+    # When --album and --album-from-url are both given, --album is used
     python3 main.py --artist='somebody' --year=2012 \
         --album='awesome album' --album-from-url \
         'URL of album/single' /foo/bar/*.flac
