@@ -103,7 +103,7 @@ def set_track_titles(titles, files, artist, album, year):
         if album:
             f.tags['ALBUM'] = album
         if year:
-            f.tags['YEAR'] = year
+            f.tags['DATE'] = year
 
         f.tags['TITLE'] = titles[i]
         digits = len(str(len(titles)))
