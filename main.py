@@ -98,6 +98,10 @@ def set_track_titles(titles, files, artist, album, year):
     for i in range(n):
         f = taglib.File(files[i])
 
+        # Remove comments
+        if 'COMMENT' in f.tags:
+            del(f.tags['COMMENT'])
+
         if artist:
             f.tags['ARTIST'] = artist
         if album:
